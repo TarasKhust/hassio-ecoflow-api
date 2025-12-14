@@ -218,7 +218,8 @@ class EcoFlowSwitch(EcoFlowBaseEntity, SwitchEntity):
                     "operateSelfPoweredOpen": self.coordinator.data.get("energyStrategyOperateMode.operateSelfPoweredOpen", False),
                     "operateTouModeOpen": tou_mode,
                     param_map[self._switch_key]: state,
-                    "operateIntelligentScheduleModeOpen": self.coordinator.data.get("energyStrategyOperateMode.operateIntelligentScheduleModeOpen", False) if self._switch_key == "tou_scheduled" else state,
+                    "operateIntelligentScheduleModeOpen": self.coordinator.data.get("energyStrategyOperateMode.operateIntelligentScheduleModeOpen", False) if self._switch_key == "tou_scheduled" else self.coordinator.data.get("energyStrategyOperateMode.operateIntelligentScheduleModeOpen", False),
+                    "operateScheduledOpen": self.coordinator.data.get("energyStrategyOperateMode.operateScheduledOpen", False) if self._switch_key == "tou_intelligent_schedule" else self.coordinator.data.get("energyStrategyOperateMode.operateScheduledOpen", False),
                 }
             }
         else:
