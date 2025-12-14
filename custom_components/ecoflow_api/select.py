@@ -132,7 +132,7 @@ class EcoFlowSelect(EcoFlowBaseEntity, SelectEntity):
         select_def: dict[str, Any],
     ) -> None:
         """Initialize the select entity."""
-        super().__init__(coordinator, entry)
+        super().__init__(coordinator, select_key)
         self._select_key = select_key
         self._select_def = select_def
         self._attr_unique_id = f"{entry.entry_id}_{select_key}"
@@ -199,7 +199,7 @@ class EcoFlowSelect(EcoFlowBaseEntity, SelectEntity):
         
         # Handle device settings
         command_key = self._select_def["command_key"]
-        device_sn = self.coordinator.config_entry.data["device_sn"]
+        device_sn = self.coordinator.device_sn
         
         # Special handling for energy strategy mode with nested parameters
         if self._select_key == "energy_strategy_mode":
