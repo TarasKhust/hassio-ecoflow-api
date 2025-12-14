@@ -5,7 +5,7 @@ import asyncio
 import logging
 from typing import Any
 
-from homeassistant.components.switch import SwitchEntity, SwitchDeviceClass
+from homeassistant.components.switch import SwitchDeviceClass, SwitchEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -81,6 +81,22 @@ DELTA_PRO_3_SWITCH_DEFINITIONS = {
         "command_key": "cfgLlcGFCIFlag",
         "icon_on": "mdi:shield-check",
         "icon_off": "mdi:shield-off",
+        "device_class": SwitchDeviceClass.SWITCH,
+    },
+    "generator_pv_hybrid": {
+        "name": "Generator PV Hybrid Mode",
+        "state_key": "generatorPvHybridModeOpen",  # bool
+        "command_key": "cfgGeneratorPvHybridModeOpen",
+        "icon_on": "mdi:solar-power",
+        "icon_off": "mdi:solar-power-outline",
+        "device_class": SwitchDeviceClass.SWITCH,
+    },
+    "generator_care_mode": {
+        "name": "Generator Care Mode",
+        "state_key": "generatorCareModeOpen",  # bool
+        "command_key": "cfgGeneratorCareModeOpen",
+        "icon_on": "mdi:weather-night",
+        "icon_off": "mdi:weather-night-outline",
         "device_class": SwitchDeviceClass.SWITCH,
     },
 }

@@ -82,6 +82,18 @@ DELTA_PRO_3_SELECT_DEFINITIONS = {
             "60 Hz": 60,
         },
     },
+    "energy_strategy_mode": {
+        "name": "Energy Strategy Mode",
+        "state_key": None,  # Special: multiple keys checked
+        "command_key": "cfgEnergyStrategyOperateMode",
+        "icon": "mdi:lightning-bolt",
+        "options": {
+            "Off": "off",
+            "Self-Powered": "self_powered",
+            "TOU": "tou",
+        },
+        "nested_params": True,
+    },
 }
 
 
@@ -148,6 +160,17 @@ class EcoFlowSelect(EcoFlowBaseEntity, SelectEntity):
         if not self.coordinator.data:
             return None
         
+        # Special handling for energy strategy mode
+        if self._select_key == "energy_strategy_mode":
+            # Check which mode is currently active
+            if self.coordinator.data.get("energyStrategyOperateMode.operateSelfPoweredOpen", False):
+                return "Self-Powered"
+            elif self.coordinator.data.get("energyStrategyOperateMode.operateTouModeOpen", False):
+                return "TOU"
+            else:
+                return "Off"
+        
+        # Standard handling for other entities
         state_key = self._select_def["state_key"]
         value = self.coordinator.data.get(state_key)
         
@@ -178,6 +201,39 @@ class EcoFlowSelect(EcoFlowBaseEntity, SelectEntity):
         command_key = self._select_def["command_key"]
         device_sn = self.coordinator.config_entry.data["device_sn"]
         
+        # Special handling for energy strategy mode with nested parameters
+        if self._select_key == "energy_strategy_mode":
+            # Map option to nested parameters
+            option_to_params = {
+                "off": {
+                    "operateSelfPoweredOpen": False,
+                    "operateTouModeOpen": False,
+                    "operateScheduledOpen": False,
+                    "operateIntelligentScheduleModeOpen": False,
+                },
+                "self_powered": {
+                    "operateSelfPoweredOpen": True,
+                    "operateTouModeOpen": False,
+                    "operateScheduledOpen": False,
+                    "operateIntelligentScheduleModeOpen": False,
+                },
+                "tou": {
+                    "operateSelfPoweredOpen": False,
+                    "operateTouModeOpen": True,
+                    "operateScheduledOpen": False,
+                    "operateIntelligentScheduleModeOpen": False,
+                },
+            }
+            
+            params = {
+                command_key: option_to_params[value]
+            }
+        else:
+            # Standard handling for other entities
+            params = {
+                command_key: value
+            }
+        
         # Build command payload according to Delta Pro 3 API format
         payload = {
             "sn": device_sn,
@@ -187,9 +243,7 @@ class EcoFlowSelect(EcoFlowBaseEntity, SelectEntity):
             "cmdFunc": 254,
             "dest": 2,
             "needAck": True,
-            "params": {
-                command_key: value
-            }
+            "params": params
         }
         
         try:

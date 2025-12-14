@@ -165,6 +165,28 @@ DELTA_PRO_3_NUMBER_DEFINITIONS = {
         "mode": NumberMode.SLIDER,
         "nested_params": True,
     },
+    "generator_pv_hybrid_max_soc": {
+        "name": "Generator PV Hybrid Max SOC",
+        "state_key": "generatorPvHybridModeSocMax",
+        "command_key": "cfgGeneratorPvHybridModeSocMax",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": PERCENTAGE,
+        "icon": "mdi:solar-power",
+        "mode": NumberMode.SLIDER,
+    },
+    "generator_care_start_time": {
+        "name": "Generator Care Start Time",
+        "state_key": "generatorCareModeStartTime",
+        "command_key": "cfgGeneratorCareModeStartTime",
+        "min": 0,
+        "max": 1440,
+        "step": 1,
+        "unit": UnitOfTime.MINUTES,
+        "icon": "mdi:weather-night",
+        "mode": NumberMode.BOX,
+    },
 }
 
 
