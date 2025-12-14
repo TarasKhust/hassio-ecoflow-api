@@ -137,7 +137,7 @@ class EcoFlowSwitch(EcoFlowBaseEntity, SwitchEntity):
         switch_def: dict[str, Any],
     ) -> None:
         """Initialize the switch."""
-        super().__init__(coordinator, entry)
+        super().__init__(coordinator, switch_key)
         self._switch_key = switch_key
         self._switch_def = switch_def
         self._attr_unique_id = f"{entry.entry_id}_{switch_key}"
