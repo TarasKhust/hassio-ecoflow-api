@@ -99,15 +99,6 @@ DELTA_PRO_3_SWITCH_DEFINITIONS = {
         "icon_off": "mdi:weather-night-outline",
         "device_class": SwitchDeviceClass.SWITCH,
     },
-    "tou_scheduled": {
-        "name": "TOU Scheduled Charging",
-        "state_key": "energyStrategyOperateMode.operateScheduledOpen",  # bool
-        "command_key": "cfgEnergyStrategyOperateMode",
-        "icon_on": "mdi:calendar-clock",
-        "icon_off": "mdi:calendar-clock-outline",
-        "device_class": SwitchDeviceClass.SWITCH,
-        "nested_params": True,
-    },
     "tou_intelligent_schedule": {
         "name": "TOU Intelligent Schedule",
         "state_key": "energyStrategyOperateMode.operateIntelligentScheduleModeOpen",  # bool
@@ -204,12 +195,6 @@ class EcoFlowSwitch(EcoFlowBaseEntity, SwitchEntity):
         
         # Handle nested parameters for TOU switches
         if self._switch_key.startswith("tou_"):
-            # Map TOU switch to nested parameter
-            param_map = {
-                "tou_scheduled": "operateScheduledOpen",
-                "tou_intelligent_schedule": "operateIntelligentScheduleModeOpen",
-            }
-            
             # Get current TOU mode state to preserve it
             tou_mode = self.coordinator.data.get("energyStrategyOperateMode.operateTouModeOpen", False)
             
@@ -217,9 +202,8 @@ class EcoFlowSwitch(EcoFlowBaseEntity, SwitchEntity):
                 command_key: {
                     "operateSelfPoweredOpen": self.coordinator.data.get("energyStrategyOperateMode.operateSelfPoweredOpen", False),
                     "operateTouModeOpen": tou_mode,
-                    param_map[self._switch_key]: state,
-                    "operateIntelligentScheduleModeOpen": self.coordinator.data.get("energyStrategyOperateMode.operateIntelligentScheduleModeOpen", False) if self._switch_key == "tou_scheduled" else self.coordinator.data.get("energyStrategyOperateMode.operateIntelligentScheduleModeOpen", False),
-                    "operateScheduledOpen": self.coordinator.data.get("energyStrategyOperateMode.operateScheduledOpen", False) if self._switch_key == "tou_intelligent_schedule" else self.coordinator.data.get("energyStrategyOperateMode.operateScheduledOpen", False),
+                    "operateIntelligentScheduleModeOpen": state,
+                    "operateScheduledOpen": self.coordinator.data.get("energyStrategyOperateMode.operateScheduledOpen", False),
                 }
             }
         else:
