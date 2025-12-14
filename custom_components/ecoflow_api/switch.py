@@ -141,6 +141,7 @@ class EcoFlowSwitch(EcoFlowBaseEntity, SwitchEntity):
         self._switch_key = switch_key
         self._switch_def = switch_def
         self._attr_unique_id = f"{entry.entry_id}_{switch_key}"
+        self._attr_name = switch_def["name"]
         self._attr_translation_key = switch_key
         self._attr_device_class = switch_def.get("device_class")
 
