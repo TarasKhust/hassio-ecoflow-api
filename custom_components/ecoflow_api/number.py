@@ -155,7 +155,7 @@ DELTA_PRO_3_NUMBER_DEFINITIONS = {
     },
     "backup_reserve_level": {
         "name": "Backup Reserve Level",
-        "state_key": "backupReverseSoc",
+        "state_key": "energyBackupStartSoc",
         "command_key": "cfgEnergyBackup",
         "min": 0,
         "max": 100,
@@ -207,6 +207,7 @@ class EcoFlowNumber(EcoFlowBaseEntity, NumberEntity):
         self._number_key = number_key
         self._number_def = number_def
         self._entry = entry
+        self._attr_unique_id = f"{entry.entry_id}_{number_key}"
         self._attr_translation_key = number_key
         
         # Set number attributes from config
